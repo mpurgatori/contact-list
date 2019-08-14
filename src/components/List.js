@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import '../styles/List.css'
 
 import { loadList } from "../actions/LoadList"
 
@@ -25,13 +26,29 @@ class List extends Component {
         const { list } = this.state;
         const { listNumber } = this.props;
         return (
-            <div>
+            <div className='List'>
                 <h1>{`List ${listNumber}`}</h1>
+                <table className='highlight'>
+                    <thead>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                    </thead>
+                    <tbody>
+
                 {
                     list.map(contact => {
-                        return <p>{contact.first_name} {contact.last_name}</p>
+
+                        return(
+                            <tr>
+                                <td>{contact.first_name}</td> 
+                                <td>{contact.last_name}</td>
+                            </tr>
+                            ) 
+
                     })
                 }
+                    </tbody>
+                </table>
             </div>
         )
 
