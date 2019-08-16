@@ -1,34 +1,64 @@
-import React, {Fragment} from 'react';
+import React, { Component } from 'react';
 import '../styles/List.css'
 
 import { Table } from 'reactstrap';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
+import Filter from './Filter';
 
 
-const List = ({listNumber, contactList, sortColumn, lastSortAscend, deleteContact, shiftContact}) => {
+class List extends Component {
     
-    const tableRight = listNumber === 'Two' ? true : false;
+    state = {
 
-    return (
-        <div className="List col-xs-6">
-            <h1>{`List ${listNumber}`}</h1>
-            <div className="small text-left">
-                <Table size="sm" hover striped bordered>
-                    <thead>
-                        {TableHeader(tableRight, sortColumn, lastSortAscend, listNumber)}
-                    </thead>
-                    <tbody>
-                    {
-                        contactList.map(contact => {
-                            return TableBody(contact, tableRight, deleteContact, listNumber, shiftContact)
-                        })
-                    }
-                    </tbody>
-                </Table>
+        filterBy: 'first_name',
+        query:''
+
+    }
+
+    filterHandler = (e) => {
+
+        this.setState({[e.target.name]: e.target.value}, this.runFilter);
+    
+    };
+
+
+
+    render() {
+        
+        const { filterHandler } = this;
+        const { filterBy, query} = this.state;
+
+        const {listNumber, contactList, sortColumn, lastSortAscend, deleteContact, shiftContact} = this.props;
+        const tableRight = listNumber === 'Two' ? true : false;
+
+        const filteredContacts = contactList.filter( item => {
+            return item[filterBy].toLowerCase().search(query.toLowerCase()) !== -1;
+          });
+    
+        return (
+            <div className="List col-xs-6">
+                {Filter(filterHandler)}
+                <h1>{`List ${listNumber}`}</h1>
+                <div className="small text-left">
+                    <Table size="sm" hover striped bordered>
+                        <thead>
+                            {TableHeader(tableRight, sortColumn, lastSortAscend, listNumber, filterBy)}
+                        </thead>
+                        <tbody>
+                        {
+                            filteredContacts.map(contact => {
+                                return TableBody(contact, tableRight, deleteContact, listNumber, shiftContact)
+                            })
+                        }
+                        </tbody>
+                    </Table>
+                </div>
             </div>
-        </div>
-    )
+        )
+
+    }
+
 
 }
 

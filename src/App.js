@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
-import List from './components/List'
-import { loadList } from "./actions/LoadList"
+import List from './components/List';
+import ContactForm from './components/ContactForm';
+import { loadList } from "./actions/LoadList";
 
 class App extends Component {
 
@@ -72,10 +73,22 @@ class App extends Component {
 
   }
 
+  filterContacts = (filterBy, query, listNumber )=> {
+    
+    // let filtered = {...this.state[listNumber]};
+
+    const filtered = this.state[listNumber].filter( item => {
+      return item[filterBy].toLowerCase().search(
+        query.toLowerCase()) !== -1;
+    });
+
+    this.setState({[listNumber]:filtered})
+  }
+
   render() {
 
     const { One, Two, lastSortAscend } = this.state;
-    const { sortColumn, deleteContact, shiftContact } = this;
+    const { sortColumn, deleteContact, shiftContact, filterContacts } = this;
 
     const listNum = [
       {
@@ -91,6 +104,9 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
+          <ContactForm 
+            filterContacts={filterContacts}
+          />
           <div className="row">
           {
             listNum.map((list, index) => {
