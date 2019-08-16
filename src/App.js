@@ -7,30 +7,84 @@ class App extends Component {
 
   state = {
 
-    contacts1: [],
-    contacts2: []
+    One: [],
+    Two: [],
+    lastSortAscend: {
+      One: {
+        first_name:false,
+        last_name:false,
+        gender:false,
+        email:false,
+      },
+      Two: {
+        first_name:false,
+        last_name:false,
+        gender:false,
+        email:false,
+      }
+    }
 
   }
 
   componentDidMount() {
 
     const ListData = loadList();
-    this.setState({contacts1: ListData});
+    this.setState({One: [...ListData], Two: []});
+
+  }
+
+  sortColumn =(sortKey, listNumber) => {
+
+    const {lastSortAscend} = this.state;
+    const sortedList = lastSortAscend[listNumber][sortKey] ? this.state[listNumber].sort((a,b) => a[sortKey].localeCompare(b[sortKey])) :
+    this.state[listNumber].sort((a,b) => b[sortKey].localeCompare(a[sortKey]))
+
+    const newSortState = {
+      ...lastSortAscend,
+    }
+    newSortState[listNumber][sortKey] = lastSortAscend[listNumber][sortKey] ? false: true;
+    
+    this.setState({
+      [listNumber]:sortedList,
+      lastSortAscend: newSortState
+    });
+  }
+
+  deleteContact = (id, listNumber) => {
+
+    const removeIndex = this.state[listNumber].map(contact => contact.id ).indexOf(id);
+    const deletedFromList = [...this.state[listNumber]];
+    deletedFromList.splice(removeIndex, 1);
+    this.setState({[listNumber]:deletedFromList});
+
+
+  }
+
+  shiftContact = (id, listNumber) => {
+
+    const removeIndex = this.state[listNumber].map(contact => contact.id ).indexOf(id);
+    const deletedFromList = [...this.state[listNumber]];
+    const secondListNumber = listNumber === 'One' ? 'Two': 'One';
+    const secondList = [...this.state[secondListNumber]];
+    const addToList = deletedFromList.splice(removeIndex, 1);
+    secondList.unshift(addToList[0]);
+    this.setState({[listNumber]:deletedFromList, [secondListNumber]: secondList});
 
   }
 
   render() {
 
-    const { contacts1, contacts2 } = this.state;
+    const { One, Two, lastSortAscend } = this.state;
+    const { sortColumn, deleteContact, shiftContact } = this;
 
     const listNum = [
       {
         num: 'One',
-        contactList: contacts1
+        contactList: One
       },
       {
         num: 'Two',
-        contactList: contacts2
+        contactList: Two
       }
     ]; 
 
@@ -39,10 +93,16 @@ class App extends Component {
         <div className="container">
           <div className="row">
           {
-            listNum.map(list => {
+            listNum.map((list, index) => {
   
-               return <List conactList={list.contactList} listNumber={list.num} />
-  
+               return <List key={index} 
+                          lastSortAscend={lastSortAscend[list.num]} 
+                          sortColumn={sortColumn} 
+                          contactList={list.contactList} 
+                          listNumber={list.num}
+                          deleteContact={deleteContact} 
+                          shiftContact={shiftContact}
+                        />
             })
           }
           </div>

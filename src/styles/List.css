@@ -3,3 +3,7 @@
     margin: 0 20px;
     width: 46%;
 }
+
+th {
+    cursor: pointer;
+}
