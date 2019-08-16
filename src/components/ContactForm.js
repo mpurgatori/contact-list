@@ -20,7 +20,6 @@ class ContactForm extends Component {
 
     onChangeHandler = (e) => {
 
-        console.log(e.target);
         if (e.target.name === 'query' || e.target.name === 'filterBy') {
 
             const newSearchQuery = {...this.state.searchQuery,[e.target.name]: e.target.value};
@@ -45,7 +44,6 @@ class ContactForm extends Component {
 
     render() {
 
-        console.log(this.state)
         const { listSelect, email, first_name, last_name } = this.state;
         const { onChangeHandler } = this;
 
