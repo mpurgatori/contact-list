@@ -7,6 +7,7 @@ import TableBody from './TableBody';
 import Filter from './Filter';
 
 
+
 class List extends Component {
     
     state = {
@@ -18,7 +19,7 @@ class List extends Component {
 
     filterHandler = (e) => {
 
-        this.setState({[e.target.name]: e.target.value}, this.runFilter);
+        this.setState({[e.target.name]: e.target.value});
     
     };
 
@@ -38,8 +39,8 @@ class List extends Component {
     
         return (
             <div className="List col-xs-6">
-                {Filter(filterHandler)}
                 <h1>{`List ${listNumber}`}</h1>
+                {Filter(filterHandler)}
                 <div className="small text-left">
                     <Table size="sm" hover striped bordered>
                         <thead>

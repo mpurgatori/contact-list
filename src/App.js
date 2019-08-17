@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
 import List from './components/List';
-import ContactForm from './components/ContactForm';
 import { loadList } from "./actions/LoadList";
+import ContactForm from './components/ContactForm';
+
 
 class App extends Component {
 
@@ -92,7 +93,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
-          <ContactForm />
+        <ContactForm />
           <div className="row">
           {
             listNum.map((list, index) => {

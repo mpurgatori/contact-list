@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../styles/ContactForm.css'
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Row, Button, Form, FormGroup, Label, Input, ButtonGroup, FormFeedback } from 'reactstrap';
 
 
 
@@ -15,29 +15,82 @@ class ContactForm extends Component {
         searchQuery: {
             filterBy: 'first_name',
             query: ''
-        }
+        },
+        validate: {}
     }
 
     onChangeHandler = (e) => {
 
-        if (e.target.name === 'query' || e.target.name === 'filterBy') {
+        this.setState({[e.target.name]: e.target.value});
 
-            const newSearchQuery = {...this.state.searchQuery,[e.target.name]: e.target.value};
-            this.setState({searchQuery: newSearchQuery}, this.filterOptions);
+    }
 
+    validateEmail = (emailVal) => {
+        const emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const { validate } = this.state
+        let failed = false;
+          if (emailRex.test(emailVal)) {
+            validate.emailState = 'has-success'
+          } 
+          else {
+            validate.emailState = 'has-danger'
+            failed = true;
+          }
+          this.setState({ validate })
+          return failed;
+        }
+    
+    validateFirst = (firstName) => {
+        const { validate } = this.state
+        let failed = false;
+        if (firstName) {
+            validate.firstState = 'has-success'
+        } 
+        else {
+            validate.firstState = 'has-danger'
+            failed = true;
+        }
+        this.setState({ validate })
+        return failed;
+    }
+
+    validateLast = (lastName) => {
+        const { validate } = this.state
+        let failed = false;
+        if (lastName) {
+            validate.lastState = 'has-success'
+        } 
+        else {
+            validate.lastState = 'has-danger'
+            failed = true;
+        }
+        this.setState({ validate })
+        return failed;
+    }
+
+    validateAll = () => {
+
+        const {email, first_name, last_name} = this.state;
+        const {validateEmail, validateFirst, validateLast} = this;
+
+        let emailFailed = validateEmail(email);
+        let firstNameFailed = validateFirst(first_name);
+        let lasttNameFailed = validateLast(last_name)
+
+
+        return (emailFailed || firstNameFailed || lasttNameFailed);
+
+    }
+
+    submitContact = () => {
+
+        if (this.validateAll()) {
+            console.log('validation failed')
         }
         else {
-
-            this.setState({[e.target.name]: e.target.value});
-
+            console.log('validation passed')
         }
-
-    };
-
-    filterOptions = () => {
-        
-        const { searchQuery, listSelect } = this.state;
-        this.props.filterContacts(searchQuery.filterBy, searchQuery.query, listSelect);
+        console.log('State',this.state);
         
 
     }
@@ -45,38 +98,38 @@ class ContactForm extends Component {
     render() {
 
         const { listSelect, email, first_name, last_name } = this.state;
-        const { onChangeHandler } = this;
+        const { onChangeHandler, submitContact } = this;
 
         return (
         <div className="ContactForm">
             <Form>
-                <FormGroup onClick={onChangeHandler} tag="fieldset">
-                    <legend>Add Contact</legend>
-                    <FormGroup>
-                        <Label>
-                        <Input checked={listSelect === 'One'} value="One" type="radio" name="listSelect" />{' '}
-                        List One
-                        </Label>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label>
-                        <Input value="Two" type="radio" name="listSelect" />{' '}
-                        List Two
-                        </Label>
-                    </FormGroup>
-                </FormGroup>
-        
                 <Row form>
                     <Col md={6}>
                         <FormGroup>
-                        <Label for="first_name">First</Label>
-                        <Input onChange={onChangeHandler} type="text" name="first_name" id="first_name" value={first_name} placeholder="Enter First Name" />
+                            <Label for="first_name">First</Label>
+                            <Input  valid={ this.state.validate.firstState === 'has-success' }
+                                    invalid={ this.state.validate.firstState === 'has-danger' } 
+                                    onChange={onChangeHandler} type="text" name="first_name" 
+                                    id="first_name" 
+                                    value={first_name} 
+                                    placeholder="Enter First Name" 
+                                />
+                            <FormFeedback invalid>Please enter a first name.</FormFeedback>
                         </FormGroup>
                     </Col>
                     <Col md={6}>
                         <FormGroup>
-                        <Label for="last_name">Last</Label>
-                        <Input onChange={onChangeHandler} type="text" name="last_name" id="last_name" value={last_name} placeholder="Enter Last Name" />
+                            <Label for="last_name">Last</Label>
+                            <Input  valid={ this.state.validate.lastState === 'has-success' }
+                                    invalid={ this.state.validate.lastState === 'has-danger' }
+                                    onChange={onChangeHandler} 
+                                    type="text" 
+                                    name="last_name" 
+                                    id="last_name" 
+                                    value={last_name} 
+                                    placeholder="Enter Last Name" 
+                               />
+                            <FormFeedback invalid>Please enter a last name.</FormFeedback>
                         </FormGroup>
                     </Col>
                 </Row>
@@ -84,7 +137,16 @@ class ContactForm extends Component {
                     <Col md={6}>
                         <FormGroup>
                         <Label for="email">Email</Label>
-                        <Input onChange={onChangeHandler} type="email" name="email" id="email" value={email} placeholder="Enter Email" />
+                        <Input valid={ this.state.validate.emailState === 'has-success' }
+                               invalid={ this.state.validate.emailState === 'has-danger' }
+                               onChange={onChangeHandler} 
+                               type="email" 
+                               name="email" 
+                               id="email" 
+                               value={email} 
+                               placeholder="Enter Email" 
+                            />
+                            <FormFeedback invalid>Please enter a valid email address.</FormFeedback>
                         </FormGroup>
                     </Col>
                     <Col md={6}>
@@ -97,7 +159,15 @@ class ContactForm extends Component {
                     </FormGroup>
                     </Col>
                 </Row>
-                <Button color="primary">Add Contact</Button>
+                <FormGroup>
+                    <ButtonGroup>
+                        <Button color="primary" name="listSelect" value="One" onClick={onChangeHandler} active={listSelect === "One"}>One</Button>
+                        <Button color="primary" name="listSelect" value="Two" onClick={onChangeHandler} active={listSelect === "Two"}>Two</Button>
+                    </ButtonGroup>
+                    <ButtonGroup>
+                        <Button onClick={submitContact} color="primary">Add Contact</Button>
+                    </ButtonGroup>
+                </FormGroup>
             </Form>
         </div>
         );
