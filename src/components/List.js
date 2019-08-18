@@ -30,7 +30,7 @@ class List extends Component {
         const { filterHandler } = this;
         const { filterBy, query} = this.state;
 
-        const {listNumber, contactList, sortColumn, lastSortAscend, deleteContact, shiftContact} = this.props;
+        const {listNumber, contactList, sortColumn, lastSortAscend, deleteContact, shiftContact, loadContact} = this.props;
         const tableRight = listNumber === 'Two' ? true : false;
 
         const filteredContacts = contactList.filter( item => {
@@ -49,7 +49,7 @@ class List extends Component {
                         <tbody>
                         {
                             filteredContacts.map(contact => {
-                                return TableBody(contact, tableRight, deleteContact, listNumber, shiftContact)
+                                return TableBody(contact, tableRight, deleteContact, listNumber, shiftContact, loadContact)
                             })
                         }
                         </tbody>

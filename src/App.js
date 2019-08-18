@@ -24,14 +24,23 @@ class App extends Component {
         gender:false,
         email:false,
       }
-    }
+    },
+    loadedContact: {
+        first_name:'',
+        last_name:'',
+        gender:'Female',
+        email:'',
+        id: 0
+    },
+    highId: 0
 
   }
 
   componentDidMount() {
 
     const ListData = loadList();
-    this.setState({One: [...ListData], Two: []});
+    const highId = ListData.sort((a,b) => b.id - a.id)[0].id;    
+    this.setState({One: [...ListData], Two: [], highId});
 
   }
 
@@ -74,10 +83,27 @@ class App extends Component {
 
   }
 
+  loadContact = (contactInfo) => {
+
+    this.setState({loadedContact:contactInfo});
+
+  }
+
+  findLastId = (listNum) => {
+
+
+  }
+
+  addEditContact = (contact) => {
+
+    console.log('contact',contact);
+
+  }
+
   render() {
 
-    const { One, Two, lastSortAscend } = this.state;
-    const { sortColumn, deleteContact, shiftContact } = this;
+    const { One, Two, lastSortAscend, loadedContact } = this.state;
+    const { sortColumn, deleteContact, shiftContact, loadContact, addEditContact } = this;
 
     const listNum = [
       {
@@ -93,7 +119,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
-        <ContactForm />
+        <ContactForm loadedContact={loadedContact} addEditContact={addEditContact} />
           <div className="row">
           {
             listNum.map((list, index) => {
@@ -105,6 +131,7 @@ class App extends Component {
                           listNumber={list.num}
                           deleteContact={deleteContact} 
                           shiftContact={shiftContact}
+                          loadContact={loadContact}
                         />
             })
           }
