@@ -1,12 +1,12 @@
 ## How To Run
 
-Install node.js if needed
-unzip file and navigate command window to folder
-Download packages with - npm install
-Run - npm start to run dev build without local server
-App should launch automatically in local host
-For unit tests run - npm test
-More information about scripts can be found below
+-Install node.js if needed
+-unzip file and navigate command window to folder
+-Download packages with - npm install
+-Run - npm start to run dev build without local server
+-App should launch automatically in local host
+-For unit tests run - npm test
+-More information about scripts can be found below
 
 ## About Project
 
