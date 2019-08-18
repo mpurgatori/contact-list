@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../styles/ContactForm.css'
-import { Col, Row, Button, Form, FormGroup, Label, Input, ButtonGroup, FormFeedback } from 'reactstrap';
+import { Col, Row, Button, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import Select from 'react-select';
 
 import { emailRex } from '../Helpers';
@@ -13,7 +13,8 @@ class ContactForm extends Component {
         email: '',
         first_name: '',
         last_name: '',
-        gender: 'Female',
+        gender: 'Male',
+        listNumber:'',
         searchQuery: {
             filterBy: 'first_name',
             query: ''
@@ -57,7 +58,7 @@ class ContactForm extends Component {
           }
           this.setState({ validate })
           return failed;
-        }
+    }
     
     validateAll = () => {
 
@@ -82,9 +83,10 @@ class ContactForm extends Component {
         }
         else {
 
-            const { id, first_name, last_name, email, gender} = this.state;
-            this.props.addEditContact({id, first_name, last_name, email, gender})
-            
+            const { id, first_name, last_name, email, gender, listNumber, listSelect} = this.state;            
+            this.props.addEditContact({id, first_name, last_name, email, gender, listNumber}, listSelect);
+            this.setState({validate:{}});
+     
         }        
 
     }
@@ -101,6 +103,7 @@ class ContactForm extends Component {
 
         return (
         <div className="ContactForm">
+            <h4 className="mb-2">Add new or double click existing contact to edit</h4>
             <Form>
                 <Row form>
                     <Col md={6}>
@@ -160,13 +163,10 @@ class ContactForm extends Component {
                     </Col>
                 </Row>
                 <FormGroup>
-                    <ButtonGroup>
-                        <Button color="primary" name="listSelect" value="One" onClick={onChangeHandler} active={listSelect === "One"}>One</Button>
-                        <Button color="primary" name="listSelect" value="Two" onClick={onChangeHandler} active={listSelect === "Two"}>Two</Button>
-                    </ButtonGroup>
-                    <ButtonGroup>
-                        <Button onClick={submitContact} color="primary">Add Contact</Button>
-                    </ButtonGroup>
+                    <h4>Add/Edit contact to list: </h4>
+                        <Button className="mr-2" color={listSelect === "One" ? "warning" :"primary"} name="listSelect" value="One" onClick={onChangeHandler}>One</Button>
+                        <Button className="mr-5" color={listSelect === "Two" ? "warning" :"primary"} name="listSelect" value="Two" onClick={onChangeHandler}>Two</Button>
+                        <Button onClick={submitContact} color="primary">Submit</Button>
                 </FormGroup>
             </Form>
         </div>

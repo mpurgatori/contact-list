@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import './App.css';
 import List from './components/List';
 import { loadList } from "./actions/LoadList";
 import ContactForm from './components/ContactForm';
 
 
+//Parent Component that renders the two lists as well as form for adding and editing contacts.
 class App extends Component {
 
   state = {
@@ -28,14 +28,16 @@ class App extends Component {
     loadedContact: {
         first_name:'',
         last_name:'',
-        gender:'Female',
+        gender:'Male',
         email:'',
-        id: 0
+        id: null
     },
     highId: 0
 
   }
 
+  //On component mount, app calls loadlist which is a function meant to mimic a redux action that basically just returns the contact json
+  //Also finds the highest id in list in order to increment new contacts from that id. The json is pre sorted but this would not be a given for a real application
   componentDidMount() {
 
     const ListData = loadList();
@@ -44,6 +46,7 @@ class App extends Component {
 
   }
 
+  //Sorts Table columns and renders new ordered list to state
   sortColumn =(sortKey, listNumber) => {
 
     const {lastSortAscend} = this.state;
@@ -61,6 +64,7 @@ class App extends Component {
     });
   }
 
+  //Removes a contact by id from specified list
   deleteContact = (id, listNumber) => {
 
     const removeIndex = this.state[listNumber].map(contact => contact.id ).indexOf(id);
@@ -71,6 +75,7 @@ class App extends Component {
 
   }
 
+  //Removes a contact by id from specified list and adds to front of other list
   shiftContact = (id, listNumber) => {
 
     const removeIndex = this.state[listNumber].map(contact => contact.id ).indexOf(id);
@@ -83,21 +88,66 @@ class App extends Component {
 
   }
 
-  loadContact = (contactInfo) => {
+  //Passes contact that has been double clicked down to form component
+  loadContact = (contactInfo, listNumber) => {
 
-    this.setState({loadedContact:contactInfo});
-
+    this.setState({loadedContact:{...contactInfo,listNumber}});
+    
   }
+  
+  addEditContact = (contact, listSelect) => {
+        
+    const loadedContactDefault = {
+      first_name:'',
+      last_name:'',
+      gender:'Female',
+      email:'',
+      id: null
+    };
 
-  findLastId = (listNum) => {
+    let removeList = null;
+    if (contact.listNumber !== listSelect) {
 
+      removeList = [...this.state[contact.listNumber]]
 
-  }
+    }
 
-  addEditContact = (contact) => {
+    let newList = [...this.state[listSelect]]
 
-    console.log('contact',contact);
+    //If contact id is null don't bother looping, just place new contact on specified list
+    if (contact.id === null) {
 
+      let high = this.state.highId;
+      contact.id = ++high;
+      newList.unshift(contact);
+      this.setState({[listSelect]: newList, highId: contact.id, loadedContact:loadedContactDefault});
+    }
+    //If edited contact came from a list that it not being sent to, remove from list A and set to list B
+    else {
+      if (removeList) {
+        for (let i= 0; i < removeList.length; i++) {
+          if (removeList[i].id === contact.id) {
+            removeList.splice(i,1);
+            newList.unshift(contact);
+            this.setState({[listSelect]: newList,[contact.listNumber]:removeList, loadedContact:loadedContactDefault});
+            return;
+          }
+        }
+      }
+      //If contact is being edited from and placed in the same list
+      else {
+        for (let i= 0; i < newList.length; i++) {
+          if (newList[i].id === contact.id) {
+            newList.splice(i,1);
+            newList.unshift(contact);
+            this.setState({[listSelect]: newList, loadedContact:loadedContactDefault});
+            return;
+          }
+        }
+      }
+
+    }
+    
   }
 
   render() {
@@ -119,6 +169,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
+        <h1 className="mt-5">Contact Manager</h1>
         <ContactForm loadedContact={loadedContact} addEditContact={addEditContact} />
           <div className="row">
           {
