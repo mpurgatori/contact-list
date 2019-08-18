@@ -2,6 +2,8 @@ import React, {Fragment} from 'react';
 import Octicon, {ChevronDown, ChevronUp} from '@primer/octicons-react';
 
 
+//TableHeader changes the move and delete columns depending if list it to the left or the right
+//Invokes sortColumn function passed through from App component
 const TableHeader = (direction, sortColumn, lastSortAscend, listNumber, filterBy) => {
 
     const filterStyle = {

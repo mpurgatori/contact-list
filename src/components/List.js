@@ -7,7 +7,7 @@ import TableBody from './TableBody';
 import Filter from './Filter';
 
 
-
+//List renders the Filter, TableHeader and TableBody functions. Passes props to both
 class List extends Component {
     
     state = {
@@ -33,6 +33,7 @@ class List extends Component {
         const {listNumber, contactList, sortColumn, lastSortAscend, deleteContact, shiftContact, loadContact} = this.props;
         const tableRight = listNumber === 'Two' ? true : false;
 
+        //Filtering done in render in order to preserve original state of list when deleting query
         const filteredContacts = contactList.filter( item => {
             return item[filterBy].toLowerCase().search(query.toLowerCase()) !== -1;
           });

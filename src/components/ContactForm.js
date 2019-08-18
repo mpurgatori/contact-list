@@ -22,6 +22,7 @@ class ContactForm extends Component {
         validate: {}
     }
 
+    //Check if user changed props for contact to edit by seeing if props changed
     componentWillReceiveProps (nextProps) {
 
         if (nextProps.loadedContact !== this.props.loadContact) {
@@ -32,18 +33,21 @@ class ContactForm extends Component {
 
     }
 
+    //Sets form info for email, first name and last name to state while user types
     onChangeHandler = (e) => {
 
         this.setState({[e.target.name]: e.target.value});
 
     }
 
+    //Sets gender information from select input when changed
     onSelectChange = (options) => {
 
         this.setState({gender: options.value});
 
     }
 
+    //Checks if inputs are valid for corresponding fields. Email reg ex imported from helpers
     validateFields = (param, value) => {
 
         const { validate } = this.state
@@ -60,6 +64,7 @@ class ContactForm extends Component {
           return failed;
     }
     
+    //Calls validateFields for email, first name and last name
     validateAll = () => {
 
         const { email, first_name, last_name } = this.state;
@@ -73,6 +78,7 @@ class ContactForm extends Component {
 
     }
 
+    //validates all fields before user submits contact to list.
     submitContact = () => {
 
 
@@ -81,6 +87,7 @@ class ContactForm extends Component {
             return false;
 
         }
+        //If validation passes reset contact form on state after addEditContact call
         else {
 
             const { id, first_name, last_name, email, gender, listNumber, listSelect} = this.state;            

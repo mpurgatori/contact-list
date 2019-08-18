@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
 
-
+//Filter designed to allow user to filter by any category as opposed to just first name
 const Filter = (filterHandler) => {
 
     return (

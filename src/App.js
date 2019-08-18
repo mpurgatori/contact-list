@@ -95,6 +95,8 @@ class App extends Component {
     
   }
   
+
+  //Add or edit contact
   addEditContact = (contact, listSelect) => {
         
     const loadedContactDefault = {

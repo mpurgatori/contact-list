@@ -2,7 +2,9 @@ import React, { Fragment } from 'react';
 import { Button } from 'reactstrap';
 import Octicon, { ArrowRight, ArrowLeft, Trashcan } from '@primer/octicons-react';
 
-
+//TableBody changes the move and delete columns depending if list it to the left or the right
+//Invokes shiftContact and deleteContact when corresponding buttons clicked
+// Each row calls loadContact when double clicked in order to pass contavt information into form
 const TableBody = (contact, direction, deleteContact, listNumber, shiftContact, loadContact) => {
 
     return(
