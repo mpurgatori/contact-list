@@ -98,7 +98,7 @@ class App extends Component {
 
   //Add or edit contact
   addEditContact = (contact, listSelect) => {
-        
+          
     const loadedContactDefault = {
       first_name:'',
       last_name:'',
@@ -108,7 +108,7 @@ class App extends Component {
     };
 
     let removeList = null;
-    if (contact.listNumber !== listSelect) {
+    if (contact.listNumber && contact.listNumber !== listSelect) {
 
       removeList = [...this.state[contact.listNumber]]
 
